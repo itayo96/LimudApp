@@ -3,45 +3,30 @@ package com.limudapp.itayo.limudapp;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.media.Image;
-import android.media.MediaActionSound;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AutoCompleteTextView;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Boolean bIsDownloadSuccess = false;
     private String strCurrentDaily;
+    private TextView txvAlert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        txvAlert = (TextView) findViewById(R.id.txvAlert);
 
         // Set up the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -54,24 +39,19 @@ public class MainActivity extends AppCompatActivity {
             DownloadLimud dlTask = new DownloadLimud();
             dlTask.execute();
         } else {
-            bIsDownloadSuccess = true;
+            txvAlert.setVisibility(View.INVISIBLE);
+            loadImage();
         }
+    }
 
+    // The function load the image of the daily Limud to the ImageView
+    private void loadImage() {
         Bitmap bmpImageBitmap =
                 BitmapFactory.decodeFile(MainActivity.this.getFilesDir().getPath() +
-                                         "/" +
-                                         strCurrentDaily);
-        TextView txvAlert = (TextView) findViewById(R.id.txvAlert);
-
-        // If the download success
-        if (bIsDownloadSuccess) {
-            // Set up the Limud image
-            ImageView imgLimudImage = (ImageView) findViewById(R.id.imgLimud);
-            imgLimudImage.setImageBitmap(bmpImageBitmap);
-            txvAlert.setVisibility(View.INVISIBLE);
-        } else {
-            txvAlert.setVisibility(View.VISIBLE);
-        }
+                        "/" +
+                        strCurrentDaily);
+        ImageView imgLimudImage = (ImageView) findViewById(R.id.imgLimud);
+        imgLimudImage.setImageBitmap(bmpImageBitmap);
     }
 
     // This private class is an AsyncTask class, in order to download the image of the daily Limud
@@ -104,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
             /***** HERE YOU DOWNLOAD THE IMAGE FROM THE SERVER *****/
 
             // Save the image to internal storage
-            /* To save the picture,
+            /* To save the image,
                **** see---> http://developer.android.com/training/basics/data-storage/files.html
             */
 
@@ -126,12 +106,11 @@ public class MainActivity extends AppCompatActivity {
                 // Shows alert to describe that there was a problem to download the daily Limud
                 Toast tstFailedAlert =
                         Toast.makeText(MainActivity.this,
-                                       "הלימוד היומי לא הורד בשל תקלת אינטרנט!",
+                                       "הלימוד היומי לא ירד בשל תקלת אינטרנט!",
                                        Toast.LENGTH_LONG);
                 tstFailedAlert.show();
             } else {
-                // Change the global success boolean
-                bIsDownloadSuccess = true;
+                loadImage();
             }
         }
     }
