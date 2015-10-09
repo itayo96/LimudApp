@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
     private void loadImage() {
         Bitmap bmpImageBitmap =
                 BitmapFactory.decodeFile(MainActivity.this.getFilesDir().getPath() +
-                        "/" +
-                        strCurrentDaily);
+                                         "/" +
+                                         strCurrentDaily);
         ImageView imgLimudImage = (ImageView) findViewById(R.id.imgLimud);
         imgLimudImage.setImageBitmap(bmpImageBitmap);
     }
