@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
                                        Toast.LENGTH_LONG);
                 tstFailedAlert.show();
             } else {
+                txvAlert.setVisibility(View.INVISIBLE);
                 loadImage();
             }
         }
